@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dungeon Library Management System</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <button class="sidebar-toggle hidden" id="sidebarToggle">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div id="authScreen" class="auth-viewport">
+      <div class="auth-containers-wrapper">
+        <h1 class="main-auth-title">LIBRARY MANAGEMENT SYSTEM</h1>
+        <div class="pixel-panel auth-container login-bg" id="loginContainer">
+          <div class="dungeon-banner">
+            <i class="fa-solid fa-dungeon"></i>
+            <h2>DUNGEON VAULT</h2>
+          </div>
+          <p class="auth-subtitle">PROCEED AT YOUR OWN RISK</p>
+
+          <form id="loginForm">
+            <div class="pixel-form-group">
+              <label>CREATURE USERNAME</label>
+              <input
+                type="text"
+                id="loginUser"
+                required
+                placeholder="e.g., admin"
+              />
+            </div>
+            <div class="pixel-form-group">
+              <label>SECRET PASS-PHRASE</label>
+              <input
+                type="password"
+                id="loginPass"
+                required
+                placeholder="PASSWORD"
+              />
+            </div>
+            <div id="loginError" class="pixel-error hidden">
+              [ ERROR: INVALID CREDENTIALS ]
+            </div>
+            <button type="submit" class="pixel-btn btn-gold">
+              CAST LOGIN SPELL
+            </button>
+            <button
+              type="button"
+              class="pixel-btn btn-green"
+              id="signupToggleBtn"
+            >
+              CREATE NEW ACCOUNT
+            </button>
+          </form>
+        </div>
+
+        <div
+          class="pixel-panel auth-container signup-bg inactive"
+          id="signupPanel"
+        >
+          <div class="dungeon-banner">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <h2>FORGE ACCOUNT</h2>
+          </div>
+          <p class="auth-subtitle">REGISTER YOUR CREATURE</p>
+
+          <form id="signupForm">
+            <div class="pixel-form-group">
+              <label>CHOOSE USERNAME</label>
+              <input
+                type="text"
+                id="signupUser"
+                required
+                placeholder="Choose creature name..."
+              />
+            </div>
+            <div class="pixel-form-group">
+              <label>CREATE PASS-PHRASE</label>
+              <input
+                type="password"
+                id="signupPass"
+                required
+                placeholder="PASSWORD"
+              />
+            </div>
+            <div class="pixel-form-group">
+              <label>CONFIRM PASS-PHRASE</label>
+              <input
+                type="password"
+                id="signupConfirm"
+                required
+                placeholder="CONFIRM PASSWORD"
+              />
+            </div>
+            <div id="signupError" class="pixel-error hidden">[ ERROR ]</div>
+            <button type="submit" class="pixel-btn btn-gold">
+              FORGE ACCOUNT
+            </button>
+            <button
+              type="button"
+              class="pixel-btn btn-gray"
+              id="backToLoginBtn"
+            >
+              RETURN TO LOGIN
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="appContainer" class="dashboard-wrapper hidden">
+      <aside class="sidebar" id="sidebarMenu">
+        <div class="brand">
+          <div class="brand-icon"><i class="fa-solid fa-scroll"></i></div>
+          <span>GRIMOIRE.COE4</span>
+        </div>
+        <nav class="navigation">
+          <button class="nav-item active" data-target="overview-tab">
+            <i class="fa-solid fa-shield-halved"></i> STATUS
+          </button>
+          <button class="nav-item" data-target="books-tab">
+            <i class="fa fa-book" aria-hidden="true"></i> BOOK INVENTORY
+          </button>
+          <button class="nav-item" data-target="reservations-tab">
+            <i class="fa-solid fa-hourglass-start"></i> RESERVED BOOKS
+          </button>
+          <button class="nav-item" data-target="history-tab">
+            <i class="fa-solid fa-skull"></i> ADMIN CHRONICLES
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <button class="pixel-btn btn-danger" id="logoutBtn">
+            ABANDON PARTY
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-workspace">
+        <header class="workspace-header">
+          <div>
+            <h1 id="view-title">LIBRARY STATUS</h1>
+            <p class="subtitle">
+              Real-time status of items in the dungeon registry
+            </p>
+          </div>
+          <div class="action-cluster">
+            <div class="search-bar">
+              <i class="fa-solid fa-gavel"></i>
+              <input
+                type="text"
+                id="globalSearch"
+                placeholder="Filter items..."
+              />
+            </div>
+            <button class="pixel-btn btn-gold" id="openBookModalBtn">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> FORGE NEW BOOK
+            </button>
+          </div>
+        </header>
+
+        <div id="overview-tab" class="tab-content active">
+          <div class="metrics-grid">
+            <div class="pixel-panel card-stat status-gold">
+              <h3>TOTAL BOOK</h3>
+              <h2 id="metric-total-books">0</h2>
+            </div>
+            <div class="pixel-panel card-stat status-green">
+              <h3>AVAILABLE BOOKS</h3>
+              <h2 id="metric-avail-books">0</h2>
+            </div>
+            <div class="pixel-panel card-stat status-red">
+              <h3>RESERVED</h3>
+              <h2 id="metric-total-res">0</h2>
+            </div>
+          </div>
+
+          <div
+            class="pixel-panel status-fun-fact-box"
+            style="margin-top: 1rem; padding: 1rem"
+          >
+            <div
+              style="
+                color: var(--pixel-gold);
+                font-size: 15px;
+                margin-bottom: 0.5rem;
+              "
+            >
+              <i class="fa-solid fa-lightbulb"></i> DID YOU KNOW?
+            </div>
+            <p
+              id="dungeonFunFact"
+              style="
+                font-size: 12px;
+                line-height: 1.6;
+                color: var(--text-pixel);
+                min-height: 30px;
+              "
+            >
+              Loading dungeon archives...
+            </p>
+          </div>
+
+          <div class="pixel-panel data-panel">
+            <div class="panel-header">
+              <h2>CHRONICLE PREVIEW</h2>
+            </div>
+            <div class="table-scroll">
+              <table class="pixel-table">
+                <thead>
+                  <tr>
+                    <th>ITEM DESIGNATION</th>
+                    <th>CREATOR SIGNATURE</th>
+                    <th>STATUS FLAG</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardQuickView"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="books-tab" class="tab-content">
+          <div class="pixel-panel data-panel">
+            <div class="table-scroll">
+              <table class="pixel-table">
+                <thead>
+                  <tr>
+                    <th>INDEX ID</th>
+                    <th>ARTIFACT TITLE</th>
+                    <th>CREATOR SIGNATURE</th>
+                    <th>STATUS CODE</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="reservations-tab" class="tab-content">
+          <div class="pixel-panel data-panel">
+            <div class="table-scroll">
+              <table class="pixel-table">
+                <thead>
+                  <tr>
+                    <th>TOKEN ID</th>
+                    <th>BOOK TITLE</th>
+                    <th>CLAIMANT ADVENTURER</th>
+                    <th>ADDRESS</th>
+                    <th>MOBILE</th>
+                    <th>TIME REMAINING</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="reservationsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="history-tab" class="tab-content">
+          <div class="pixel-panel data-panel">
+            <div class="panel-header-actions">
+              <h2>VAULT CHRONICLES</h2>
+            </div>
+            <div class="log-stream" id="logStreamContainer"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="assetModal" class="modal-overlay">
+      <div class="pixel-panel modal-surface">
+        <div class="modal-header">
+          <h2>FORGE ARTIFACT</h2>
+          <button class="close-modal-btn" id="closeAssetModal">&times;</button>
+        </div>
+        <form id="assetForm">
+          <div class="pixel-form-group">
+            <label>ARTIFACT TITLE</label>
+            <input
+              type="text"
+              id="bookTitle"
+              required
+              placeholder="e.g., Necronomicon"
+            />
+          </div>
+          <div class="pixel-form-group">
+            <label>CREATOR SIGNATURE</label>
+            <input
+              type="text"
+              id="bookAuthor"
+              required
+              placeholder="e.g., Mad Abdul"
+            />
+          </div>
+          <div class="modal-footer-actions">
+            <button type="submit" class="pixel-btn btn-gold">FORGE ITEM</button>
+            <button
+              type="button"
+              class="pixel-btn btn-gray"
+              id="cancelAssetBtn"
+            >
+              ABORT
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="bookingModal" class="modal-overlay">
+      <div class="pixel-panel modal-surface">
+        <div class="modal-header">
+          <h2>CAST LOCK SPELL</h2>
+          <button class="close-modal-btn" id="closeBookingModal">
+            &times;
+          </button>
+        </div>
+        <form id="bookingForm">
+          <input type="hidden" id="bookingTargetId" />
+          <div class="pixel-form-group">
+            <label>TARGET BOOK</label>
+            <input
+              type="text"
+              id="bookingTargetTitle"
+              readonly
+              class="input-disabled"
+            />
+          </div>
+          <div class="pixel-form-group">
+            <label>ADVENTURER NAME</label>
+            <input
+              type="text"
+              id="patronName"
+              required
+              placeholder="e.g., Elfont the Bold"
+            />
+          </div>
+          <div class="pixel-form-group">
+            <label>ADVENTURER ADDRESS</label>
+            <input
+              type="text"
+              id="patronAddress"
+              required
+              placeholder="e.g., Eldoria Castle Vault 3"
+            />
+          </div>
+          <div class="pixel-form-group">
+            <label>MOBILE NUMBER</label>
+            <input
+              type="text"
+              id="patronMobile"
+              required
+              placeholder="e.g., 09123456789"
+              inputmode="numeric"
+              pattern="[0-9]{11}"
+              minlength="11"
+              maxlength="11"
+              title="(ex. 09123456789)"
+            />
+          </div>
+          <div class="modal-footer-actions">
+            <button type="submit" class="pixel-btn btn-green">LOCK ITEM</button>
+            <button
+              type="button"
+              class="pixel-btn btn-gray"
+              id="cancelBookingBtn"
+            >
+              ABORT
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
