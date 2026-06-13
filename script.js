@@ -635,7 +635,7 @@ function registerControlGateListeners() {
         `Forge blocked: '${title}' title already exists in the archive.`,
         "cancel",
       );
-rt
+
       showDungeonAlert(
         "DUPLICATE ARTIFACT TITLE",
         `The book title "${title}" already exists in your inventory!`,
